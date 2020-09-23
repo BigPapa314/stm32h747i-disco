@@ -1,0 +1,49 @@
+[package]
+edition = "2018"
+authors = ["Daniel Egger <daniel@eggers-club.de>"]
+categories = [
+    "embedded",
+    "no-std",
+]
+description = "Board support crate for the STM32F429I DISCOVERY microcontroller board"
+documentation = "https://docs.rs/crate/stm32f429i-disc"
+keywords = [
+    "arm",
+    "cortex-m",
+    "template",
+    "bsp",
+    "stm32",
+    "stm32f429"
+]
+license = "0BSD"
+name = "stm32f429i-disc"
+repository = "https://github.com/stm32-rs/stm32f429i-disc"
+version = "0.3.0"
+readme = "README.md"
+
+[dependencies]
+cortex-m = "0.6.2"
+cortex-m-rt = "0.6.12"
+
+[dependencies.embedded-hal]
+features = ["unproven"]
+version = "0.2.3"
+
+[dependencies.stm32f4xx-hal]
+default-features = false
+features = ["rt", "stm32f429"]
+version = "0.8.0"
+
+[dev-dependencies]
+ssd1306 = "0.4"
+nb = "1.0"
+panic-halt = "0.2.0"
+l3gd20 = "0.2.0"
+
+[profile.dev]
+debug = true
+
+[profile.release]
+debug = true
+lto = true
+opt-level = "s"
