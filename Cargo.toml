@@ -1,24 +1,24 @@
 [package]
 edition = "2018"
-authors = ["Daniel Egger <daniel@eggers-club.de>"]
+authors = ["Thomas Kilian <thomas-kilian@gmx.net>"]
 categories = [
     "embedded",
     "no-std",
 ]
-description = "Board support crate for the STM32F429I DISCOVERY microcontroller board"
-documentation = "https://docs.rs/crate/stm32f429i-disc"
+description = "Board support crate for the STM32H747I DISCOVERY microcontroller board"
+documentation = "https://docs.rs/crate/stm32h747i-disco"
 keywords = [
     "arm",
     "cortex-m",
     "template",
     "bsp",
     "stm32",
-    "stm32f429"
+    "stm32H747"
 ]
 license = "0BSD"
-name = "stm32f429i-disc"
-repository = "https://github.com/stm32-rs/stm32f429i-disc"
-version = "0.3.0"
+name = "stm32h747i-disco"
+repository = "https://github.com/BigPapa314/stm32h747i-disco"
+version = "0.1.0"
 readme = "README.md"
 
 [dependencies]

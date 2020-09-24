@@ -1,19 +1,19 @@
-stm32f429i-disc
-===============
+stm32h747i-disco
+================
 
-_stm32f429i-disc_ contains a basic board support package for the
-[STM32F429I-DISC][] microcontroller board to write firmwares using the Rust
-language. This experimentation board features multiple user programmable LEDs
-a gyroscope, an LCD display with resistive touch layer, 64Mbit of memory and a
-user programmable USB connector.
-It also contains a (non-removable) capable ST-Link V2 debugging interface.
+_stm32h747i-disco_ contains a basic board support package for the
+[STM32H747I-DISCO][] microcontroller board to write firmwares using the Rust
+language. 
 
-* A computer (macOS and Linux work perfectly, Windows should work but was not tested)
-* A bit of open source software
+Supported Components
+--------------------
 
-[STM32F429I-DISC]: https://www.st.com/en/evaluation-tools/32f429idiscovery.html
+This crate is based of the [stm32f429i-disc][] crate.
 
 License
 -------
 
 [0-clause BSD license](LICENSE-0BSD.txt).
+
+[STM32H747I-DISCO]: https://www.st.com/en/evaluation-tools/stm32h747i-disco.html
+[stm32f429i-disc]: https://crates.io/crates/stm32f429i-disc
