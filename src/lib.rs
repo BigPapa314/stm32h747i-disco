@@ -1,7 +1,7 @@
 #![no_std]
 #![allow(non_camel_case_types)]
 
-pub extern crate stm32f4xx_hal as hal;
+pub extern crate stm32h7xx_hal as hal;
 
 extern crate cortex_m;
 extern crate cortex_m_rt;

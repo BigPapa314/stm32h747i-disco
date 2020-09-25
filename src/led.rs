@@ -4,6 +4,8 @@ use hal::prelude::*;
 
 use hal::gpio::gpiog::{self, PG, PG13, PG14};
 use hal::gpio::{Output, PushPull};
+use hal::hal::digital::v2::OutputPin;
+use hal::hal::digital::v2::InputPin;
 
 ///  Green LED
 pub type LD3 = PG13<Output<PushPull>>;

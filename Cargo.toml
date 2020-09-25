@@ -29,10 +29,10 @@ cortex-m-rt = "0.6.12"
 features = ["unproven"]
 version = "0.2.3"
 
-[dependencies.stm32f4xx-hal]
+[dependencies.stm32h7xx-hal]
 default-features = false
-features = ["rt", "stm32f429"]
-version = "0.8.0"
+features = ["rt", "stm32h747cm7"]
+version = "0.7.1"
 
 [dev-dependencies]
 ssd1306 = "0.4"
