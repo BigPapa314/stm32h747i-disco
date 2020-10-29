@@ -12,6 +12,9 @@ pub use crate::hal::*;
 pub use cortex_m::*;
 pub use cortex_m_rt::*;
 
+pub mod board;
+pub use board::*;
+
 use core::sync::atomic::{AtomicUsize, Ordering};
 
 /// Terminates the application and makes `probe-run` exit with exit-code = 0
