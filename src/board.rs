@@ -1,42 +1,52 @@
-use core::sync::atomic::{AtomicBool, Ordering};
+use stm32h7xx_hal::delay;
+use stm32h7xx_hal::gpio;
+use stm32h7xx_hal::prelude::*;
+use stm32h7xx_hal::time::Hertz;
+use stm32h7xx_hal::time::MilliSeconds;
 
-use crate::hal::stm32;
-
-pub struct Board {}
-
-pub struct BoardImpl<CorePereipheral> {
-    core_peripherals: CorePereipheral,
+pub struct Board {
+    pub leds: Leds,
+    delay: delay::Delay,
 }
 
-static IS_CONSTRAINED: AtomicBool = AtomicBool::new(false);
+pub struct Leds {
+    pub green: gpio::Pin<'I', 12_u8, gpio::Output<gpio::PushPull>>,
+    pub orange: gpio::Pin<'I', 13_u8, gpio::Output<gpio::PushPull>>,
+    pub red: gpio::Pin<'I', 14_u8, gpio::Output<gpio::PushPull>>,
+    pub blue: gpio::Pin<'I', 15_u8, gpio::Output<gpio::PushPull>>,
+}
 
 impl Board {
-    pub fn constrain() -> Option<BoardImpl<stm32::Peripherals>> {
-        if IS_CONSTRAINED.load(Ordering::Relaxed) {
-            None
-        } else {
-            IS_CONSTRAINED.store(true, Ordering::Relaxed);
-            Some(BoardImpl {
-                core_peripherals: stm32::Peripherals::take()
-                    .expect("could not get core peripherals"),
-            })
-        }
-    }
-}
+    pub fn initialize(frequency: Hertz) -> Option<Board> {
+        let cortex_peripherals = cortex_m::Peripherals::take()?;
+        let stm32h7_peripherals = stm32h7::stm32h747cm7::Peripherals::take()?;
 
-impl<CorePereipheral> BoardImpl<CorePereipheral> {
-    pub fn release(self) {
-        IS_CONSTRAINED.store(false, Ordering::Relaxed);
-    }
-}
+        defmt::println!("Setup PWR...");
+        let pwr = stm32h7_peripherals.PWR.constrain();
 
-impl BoardImpl<stm32::Peripherals> {
-    pub fn core_peripherals(self) -> (BoardImpl<()>, stm32::Peripherals) {
-        (
-            BoardImpl {
-                core_peripherals: (),
+        let pwrcfg = pwr.smps().freeze();
+
+        // Constrain and Freeze clock
+        defmt::println!("Setup RCC...");
+        let rcc = stm32h7_peripherals.RCC.constrain();
+        let ccdr = rcc
+            .sys_ck(frequency)
+            .freeze(pwrcfg, &stm32h7_peripherals.SYSCFG);
+
+        let gpioi = stm32h7_peripherals.GPIOI.split(ccdr.peripheral.GPIOI);
+
+        Some(Board {
+            leds: Leds {
+                green: gpioi.pi12.into_push_pull_output(),
+                orange: gpioi.pi13.into_push_pull_output(),
+                red: gpioi.pi14.into_push_pull_output(),
+                blue: gpioi.pi15.into_push_pull_output(),
             },
-            self.core_peripherals,
-        )
+            delay: cortex_peripherals.SYST.delay(ccdr.clocks),
+        })
+    }
+
+    pub fn delay(&mut self, time: MilliSeconds) {
+        self.delay.delay_ms(time.to_millis());
     }
 }
