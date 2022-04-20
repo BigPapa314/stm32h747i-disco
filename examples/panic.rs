@@ -5,7 +5,7 @@ use stm32h747i_disco as _; // global logger + panicking-behavior + memory layout
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
-    defmt::println!("Hello, world!");
+    defmt::println!("main");
 
-    stm32h747i_disco::exit()
+    defmt::panic!()
 }

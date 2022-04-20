@@ -1,21 +1,18 @@
+#![no_main]
 #![no_std]
-#![allow(non_camel_case_types)]
 
-pub extern crate stm32h7xx_hal as hal;
+use defmt_rtt as _; // global logger
 
-extern crate cortex_m;
-extern crate cortex_m_rt;
+use stm32h7xx_hal as _;
 
-pub use crate::hal::stm32::interrupt::*;
-pub use crate::hal::stm32::*;
-pub use crate::hal::*;
-pub use cortex_m::*;
-pub use cortex_m_rt::*;
+use panic_probe as _;
 
-pub mod board;
-pub use board::*;
-
-use core::sync::atomic::{AtomicUsize, Ordering};
+// same panicking *behavior* as `panic-probe` but doesn't print a panic message
+// this prevents the panic message being printed *twice* when `defmt::panic` is invoked
+#[defmt::panic_handler]
+fn panic() -> ! {
+    cortex_m::asm::udf()
+}
 
 /// Terminates the application and makes `probe-run` exit with exit-code = 0
 pub fn exit() -> ! {
@@ -24,10 +21,16 @@ pub fn exit() -> ! {
     }
 }
 
-pub fn timestamp() -> u64 {
-    static COUNT: AtomicUsize = AtomicUsize::new(0);
-    // NOTE(no-CAS) `timestamps` runs with interrupts disabled
-    let n = COUNT.load(Ordering::Relaxed);
-    COUNT.store(n + 1, Ordering::Relaxed);
-    n as u64
+// defmt-test 0.3.0 has the limitation that this `#[tests]` attribute can only be used
+// once within a crate. the module can be in any file but there can only be at most
+// one `#[tests]` module in this library crate
+#[cfg(test)]
+#[defmt_test::tests]
+mod unit_tests {
+    use defmt::assert;
+
+    #[test]
+    fn it_works() {
+        assert!(true)
+    }
 }
